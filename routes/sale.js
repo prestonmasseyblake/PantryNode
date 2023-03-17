@@ -82,7 +82,7 @@ router.get('/stock', ensureAuthenticated, function(req, res) {
         res.redirect('index', { errors });
     } else {
         
-        var donor; //No query being sent
+        var donor; //No query being sent in request
         var donor_name;
         console.log(Object.keys(req.query)); 
         if (Object.keys(req.query).length !== 0) {
@@ -90,11 +90,11 @@ router.get('/stock', ensureAuthenticated, function(req, res) {
             donor_name = req.query.name;
         }
         console.log(donor); 
-
+        
+        person_id = Object.values(req.user.dataValues)[0];
         const allCategories = item.rawAttributes.category.values;
-        console.log(allCategories);
         res.render('stock', {
-            data: { name: req.user.name, categories: allCategories, donorId: donor, donorName: donor_name }
+            data: { name: person_id, categories: allCategories, donorId: donor, donorName: donor_name }
         })
     }
 });
@@ -103,20 +103,21 @@ router.get('/stock', ensureAuthenticated, function(req, res) {
 router.post('/add_stock', function(req, res) {
 
     var { itemName, itemType, quantity, dateExp, price, donorID } = req.body;
+
     item.findOrCreate({
         where: {
           name: itemName,
-        }
+        },
+        defaults: {
+            stor_id: 1, //WILL NEED TO CHANGE ONCE FRONT END IT UPDATED
+        },
         }).then(([new_item, created]) => {
             if (created) {
-                new_item.set({
-                    stor_id: 1, //WILL NEED TO CHANGE ONCE FRONT END IT UPDATED
-                });
                 new_item.save();
                 console.log(new_item);
           }
         transaction.create({
-            person_id: donorID,
+            person_id: Object.values(req.user.dataValues)[0], //defaults to currently logged in user
             site: 1,
             trans_type: 'donation',
         }).then(trans => {
