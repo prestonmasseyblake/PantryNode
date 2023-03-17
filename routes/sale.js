@@ -10,7 +10,7 @@ const Checkout = require('../models-old/Checkout');
 
 var { Sequelize } = require('sequelize');
 
-var { initModels, person, item, trans_items, transaction } = require("../models/init-models");
+var { initModels, person, item, trans_items, transaction, stock } = require("../models/init-models");
 
 var con_string = require('../config/keys').PostgresURI;
 const sequelize = new Sequelize(con_string)
@@ -81,16 +81,18 @@ router.get('/stock', ensureAuthenticated, function(req, res) {
         let errors = [];
         res.redirect('index', { errors });
     } else {
-
-        var donor;
+        
+        var donor; //No query being sent
         var donor_name;
-
+        console.log(Object.keys(req.query)); 
         if (Object.keys(req.query).length !== 0) {
             donor = req.query.id;
             donor_name = req.query.name;
         }
-        console.log(donor);
-        const allCategories = item.getAttributes().category?.defaultValue;
+        console.log(donor); 
+
+        const allCategories = item.rawAttributes.category.values;
+        console.log(allCategories);
         res.render('stock', {
             data: { name: req.user.name, categories: allCategories, donorId: donor, donorName: donor_name }
         })
