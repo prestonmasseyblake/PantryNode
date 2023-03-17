@@ -64,8 +64,14 @@ VALUES ((SELECT MAX(section_id) FROM Section), 100),
        ((SELECT MAX(section_id) FROM Section)-1, 75),
        ((SELECT MAX(section_id) FROM Section)-1, 150);
 
+INSERT INTO category (name)
+VALUES ('produce'),
+       ('fruit'),
+       ('meat'),
+       ('dairy');
+
 -- Insert test data for Item
-INSERT INTO Item (name, category, stor_id, size)
+INSERT INTO Item (name, category_id, stor_id, size)
 VALUES ('Apples', 'produce', (SELECT MAX(stor_id) FROM Storage_type)-1, 10),
        ('Oranges', 'produce', (SELECT MAX(stor_id) FROM Storage_type), 15),
        ('Milk', 'dairy', (SELECT MAX(stor_id) FROM Storage_type)-2, 1),

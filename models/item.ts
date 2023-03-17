@@ -1,24 +1,25 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { storage_type, storage_typeId } from './storage_type';
+import type { category, categoryId } from './category';
 
 export interface itemAttributes {
   item_id: number;
   name?: string;
-  category?: "produce" | "fruit" | "meat" | "dairy" | "baked goods" | "canned" | "snacks" | "beverage" | "condiments & spices" | "processed foods" | "other";
+  category_id?: number;
   stor_id: number;
   size?: number;
 }
 
 export type itemPk = "item_id";
 export type itemId = item[itemPk];
-export type itemOptionalAttributes = "item_id" | "name" | "category" | "size";
+export type itemOptionalAttributes = "item_id" | "name" | "category_id" | "size";
 export type itemCreationAttributes = Optional<itemAttributes, itemOptionalAttributes>;
 
 export class item extends Model<itemAttributes, itemCreationAttributes> implements itemAttributes {
   item_id!: number;
   name?: string;
-  category?: "produce" | "fruit" | "meat" | "dairy" | "baked goods" | "canned" | "snacks" | "beverage" | "condiments & spices" | "processed foods" | "other";
+  category_id?: number;
   stor_id!: number;
   size?: number;
 
@@ -27,6 +28,13 @@ export class item extends Model<itemAttributes, itemCreationAttributes> implemen
   getStor!: Sequelize.BelongsToGetAssociationMixin<storage_type>;
   setStor!: Sequelize.BelongsToSetAssociationMixin<storage_type, storage_typeId>;
   createStor!: Sequelize.BelongsToCreateAssociationMixin<storage_type>;
+  
+  // item belongsTo category via category_id
+  category!: category;
+  getCategory!: Sequelize.BelongsToGetAssociationMixin<category>;
+  setCategory!: Sequelize.BelongsToSetAssociationMixin<category, categoryId>;
+  createCategory!: Sequelize.BelongsToCreateAssociationMixin<category>;
+
 
   static initModel(sequelize: Sequelize.Sequelize): typeof item {
     return item.init({
@@ -41,8 +49,8 @@ export class item extends Model<itemAttributes, itemCreationAttributes> implemen
       allowNull: true,
       unique: "item_name_key"
     },
-    category: {
-      type: DataTypes.ENUM("produce","fruit","meat","dairy","baked goods","canned","snacks","beverage","condiments & spices","processed foods","other"),
+    category_id: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     stor_id: {
