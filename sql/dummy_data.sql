@@ -72,10 +72,10 @@ VALUES ('produce'),
 
 -- Insert test data for Item
 INSERT INTO Item (name, category_id, stor_id, size)
-VALUES ('Apples', 'produce', (SELECT MAX(stor_id) FROM Storage_type)-1, 10),
-       ('Oranges', 'produce', (SELECT MAX(stor_id) FROM Storage_type), 15),
-       ('Milk', 'dairy', (SELECT MAX(stor_id) FROM Storage_type)-2, 1),
-       ('Cheese', 'dairy', (SELECT MAX(stor_id) FROM Storage_type)-2, 0.5);
+VALUES ('Apples', (select category_id from category where name = 'produce'), (SELECT MAX(stor_id) FROM Storage_type)-1, 10),
+       ('Oranges', (select category_id from category where name = 'produce'), (SELECT MAX(stor_id) FROM Storage_type), 15),
+       ('Milk', (select category_id from category where name = 'dairy'), (SELECT MAX(stor_id) FROM Storage_type)-2, 1),
+       ('Cheese', (select category_id from category where name = 'dairy'), (SELECT MAX(stor_id) FROM Storage_type)-2, 0.5);
 
 -- Insert test data for Permissions
 INSERT INTO Permissions (perm_num, description)

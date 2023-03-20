@@ -43,10 +43,11 @@ CREATE TABLE Shelf (
     FOREIGN KEY (section_id)
       REFERENCES Section(section_id)
 );
+
 CREATE TABLE Category (
   category_id serial,
   name text UNIQUE NOT NULL,
-  PRIMARY KEY (category_id),
+  PRIMARY KEY (category_id)
 );
 
 CREATE TABLE Item (
@@ -58,7 +59,7 @@ CREATE TABLE Item (
   PRIMARY KEY (item_id),
   CONSTRAINT FK_Item_stor_id
     FOREIGN KEY (stor_id)
-      REFERENCES Storage_type(stor_id)
+      REFERENCES Storage_type(stor_id),
   CONSTRAINT FK_Item_category_id
     FOREIGN KEY (category_id)
       REFERENCES Category(category_id)
