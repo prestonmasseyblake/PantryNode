@@ -10,7 +10,7 @@ const Checkout = require('../models-old/Checkout');
 
 var { Sequelize } = require('sequelize');
 
-var { initModels, person, item, trans_items, transaction, stock } = require("../models/init-models");
+var { initModels, person, item, trans_items, transaction, stock, category } = require("../models/init-models");
 
 var con_string = require('../config/keys').PostgresURI;
 const sequelize = new Sequelize(con_string)
@@ -92,9 +92,12 @@ router.get('/stock', ensureAuthenticated, function(req, res) {
         console.log(donor); 
         
         person_id = Object.values(req.user.dataValues)[0];
-        const allCategories = item.rawAttributes.category.values;
-        res.render('stock', {
-            data: { name: person_id, categories: allCategories, donorId: donor, donorName: donor_name }
+        category.findAll({
+            attributes: ['name']
+        }).then(allCategories => {
+            res.render('stock', {
+                data: { name: person_id, categories: allCategories, donorId: donor, donorName: donor_name }
+            })
         })
     }
 });
