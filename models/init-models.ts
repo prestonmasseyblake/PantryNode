@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const { address: _address } = require("./address");
 const { aisle: _aisle } = require("./aisle");
+const { category: _category } = require("./category");
 const { empl_info: _empl_info } = require("./empl_info");
 const { item: _item } = require("./item");
 const { permissions: _permissions } = require("./permissions");
@@ -19,6 +20,7 @@ const {
   addressCreationAttributes,
 } = require("./address");
 const { aisleAttributes, aisleCreationAttributes } = require("./aisle");
+const { categoryAttributes, categoryCreationAttributes } = require("./category");
 const {
   empl_infoAttributes,
   empl_infoCreationAttributes,
@@ -50,6 +52,7 @@ const {
 export {
   _address as address,
   _aisle as aisle,
+  _category as category,
   _empl_info as empl_info,
   _item as item,
   _permissions as permissions,
@@ -69,6 +72,8 @@ export type {
   addressCreationAttributes,
   aisleAttributes,
   aisleCreationAttributes,
+  categoryAttributes,
+  categoryCreationAttributes,
   empl_infoAttributes,
   empl_infoCreationAttributes,
   itemAttributes,
@@ -96,8 +101,9 @@ export type {
 };
 
 export function initModels(sequelize: typeof Sequelize) {
-  const address = _address.initModel(sequelize);
+  const address = _address.initModel(sequelize); 
   const aisle = _aisle.initModel(sequelize);
+  const category = _category.initModel(sequelize);
   const empl_info = _empl_info.initModel(sequelize);
   const item = _item.initModel(sequelize);
   const permissions = _permissions.initModel(sequelize);
@@ -133,6 +139,8 @@ export function initModels(sequelize: typeof Sequelize) {
   site.hasMany(transaction, { as: "transactions", foreignKey: "site"});
   item.belongsTo(storage_type, { as: "stor", foreignKey: "stor_id"});
   storage_type.hasMany(item, { as: "items", foreignKey: "stor_id"});
+  item.belongsTo(category, { as: "category", foreignKey: "category_id" });
+  category.hasMany(item, { as: "items", foreignKey: "category_id" });
   section.belongsTo(storage_type, { as: "stor", foreignKey: "stor_id"});
   storage_type.hasMany(section, { as: "sections", foreignKey: "stor_id"});
   shelf_contents.belongsTo(trans_items, { as: "trans_item", foreignKey: "trans_item_id"});
@@ -143,6 +151,7 @@ export function initModels(sequelize: typeof Sequelize) {
   return {
     address: address,
     aisle: aisle,
+    category: category,
     empl_info: empl_info,
     item: item,
     permissions: permissions,
