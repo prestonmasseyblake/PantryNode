@@ -140,23 +140,19 @@ router.post('/add_cat', function(req, res) {
 
     const { categoryName } = req.body;
 
-
-
-    const newCat = new Category({
-        categoryName
+    category.findOrCreate({
+        where: {
+            name: categoryName
+        }
+    }).then(([category, created]) => {
+        if (!created) {
+            res.redirect('/category?error=Category Exists!');
+        }
+        else {
+            console.log(category);// Nothing renders on success
+        }
     });
-
-
-
-    newCat.save();
-
-    // console.log(newStock);
-    // console.log(newItem);
-
     res.redirect('/stock');
-
-
-
 });
 
 
@@ -433,8 +429,6 @@ router.get('/charts', ensureAuthenticated, function(req, res) {
 
                                     }
                                 });
-
-
                             }
                         })
 
