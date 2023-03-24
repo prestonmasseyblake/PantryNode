@@ -65,12 +65,19 @@ router.get('/donor', ensureAuthenticated, function(req, res) {
             errors.push(req.query.error);
         }
         person.findAll({
-            attributes: ['person_id', 'fname', 'lname', 'email'],
+            includeIgnoreAttributes: false,
+            attributes: [
+                'person_id', 
+                'fname', 
+                'lname', 
+                'email'
+            ],
             include: [{
                 model: transaction,
                 as: 'transactions',
                 where: { trans_type: 'donation' }
-            }]
+            }],
+            group: sequelize.col('person.person_id')
         }).then(allDonors => {
             res.render('all_donors', {
                 data: { name: req.user.name, donors: allDonors }
