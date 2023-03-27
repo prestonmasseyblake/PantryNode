@@ -65,16 +65,27 @@ router.get('/donor', ensureAuthenticated, function(req, res) {
             errors.push(req.query.error);
         }
         person.findAll({
-            where: {
-                empl_id: undefined
-              }
+            includeIgnoreAttributes: false,
+            attributes: [
+                'person_id', 
+                'fname', 
+                'lname', 
+                'email'
+            ],
+            include: [{
+                model: transaction,
+                as: 'transactions',
+                where: { trans_type: 'donation' }
+            }],
+            group: sequelize.col('person.person_id')
         }).then(allDonors => {
-            res.render('donor', {
+            res.render('all_donors', {
                 data: { name: req.user.name, donors: allDonors }
             })
-        }).catch(err => console.log(err)); 
+        }).catch(err => console.log(err));
     }
 });
+
 
 router.get('/stock', ensureAuthenticated, function(req, res) {
     if (!req.isAuthenticated()) {

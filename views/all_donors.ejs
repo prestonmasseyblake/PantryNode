@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <titie>Donor List</titie>
+        <meta charset="utf-8"/>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>person_id</th>
+                    <th>fname</th>
+                    <th>lname</th>
+                    <th>email</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(var i=0; i<(data.donors).length; i++) {%>
+                <tr>
+                    <td><%= data.donors[i].person_id %></td>
+                    <td><%= data.donors[i].fname %></td>
+                    <td><%= data.donors[i].lname %></td>
+                    <td><%= data.donors[i].email %></td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </body>
+</html>
