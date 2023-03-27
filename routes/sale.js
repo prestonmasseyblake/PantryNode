@@ -171,7 +171,7 @@ router.post('/checkout', ensureAuthenticated, function(req, res) {
             if (item) {
 
                 const oneDay = 24 * 60 * 60 * 1000;
-                const diff = Math.round(Math.abs((new Date() - new Date(item.dateExp)) / oneDay));
+                const diff = Math.round(Math.abs((new Date() - new Date(item)) / oneDay));
                 console.log("Days:" + diff);
 
                 if (diff <= 2) {
